@@ -22,14 +22,14 @@ export const DEFAULT_BUSINESS_PROFILE: BusinessProfile = {
 };
 
 export const DEFAULT_CUSTOMER: CustomerDetails = {
-  name: "Sri Ramanathaswamy Jewellers",
-  street: "North Car Street",
+  name: "",
+  street: "",
   place: "Rameswaram",
   district: "Ramanathapuram",
   state: "Tamil Nadu",
   pincode: "623526",
-  contact: "9842156789",
-  email: "ramanathaswamy@example.com"
+  contact: "",
+  email: ""
 };
 
 export const dateToday = (): string => {
@@ -72,18 +72,10 @@ export const generateBillId = (): string => {
 export const INITIAL_ITEMS: ServiceItem[] = [
   {
     id: 'item-1',
-    description: 'Special Festive Offer - Instagram Reels Video & Feed Post Promotion',
-    platforms: ['Instagram', 'Facebook'],
-    fromDate: dateToday(),
-    toDate: addDays(dateToday(), 7),
-    amount: 3500
-  },
-  {
-    id: 'item-2',
-    description: 'Story Ad Campaign & Brand Tagging',
+    description: '',
     platforms: ['Instagram'],
     fromDate: dateToday(),
-    toDate: addDays(dateToday(), 3),
-    amount: 1500
-  }
+    toDate: dateToday(),
+    amount: '',
+  },
 ];

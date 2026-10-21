@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { BillData, BusinessProfile, Language, CustomerDetails } from './types/billing';
+import { BillData, BusinessProfile, Language, CustomerDetails, ServiceItem } from './types/billing';
 import {
   DEFAULT_BUSINESS_PROFILE,
   DEFAULT_CUSTOMER,
@@ -56,23 +56,33 @@ export default function App() {
       const savedDraft = localStorage.getItem(LOCAL_STORAGE_CURRENT_DRAFT);
       if (savedDraft) {
         const parsed = JSON.parse(savedDraft);
-        if (parsed && parsed.customer && Array.isArray(parsed.items)) {
+        const hasOldDefaultValues =
+          parsed?.customer?.name === 'Sri Ramanathaswamy Jewellers' ||
+          parsed?.items?.some((it: ServiceItem) => it.description?.includes('Special Festive Offer'));
+
+        if (parsed && parsed.customer && Array.isArray(parsed.items) && !hasOldDefaultValues) {
           return parsed;
         }
       }
     } catch {
       // fallback
     }
-    return {
+    const cleanInitial = {
       id: `bill-${Date.now()}`,
       billNumber: generateBillId(),
       billDate: dateToday(),
       customer: { ...DEFAULT_CUSTOMER },
       items: [...INITIAL_ITEMS],
-      paymentStatus: 'unpaid',
+      paymentStatus: 'unpaid' as const,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
+    try {
+      localStorage.setItem(LOCAL_STORAGE_CURRENT_DRAFT, JSON.stringify(cleanInitial));
+    } catch {
+      // ignore
+    }
+    return cleanInitial;
   });
 
   // 5. Saved Bills History (persisted in browser local storage, with all dummy records removed)
