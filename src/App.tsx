@@ -75,38 +75,30 @@ export default function App() {
     };
   });
 
-  // 5. Saved Bills History (persisted in browser local storage)
+  // 5. Saved Bills History (persisted in browser local storage, with all dummy records removed)
   const [savedBills, setSavedBills] = useState<BillData[]>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_BILLS);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed;
+          // Filter out any dummy or sample records
+          const realBills = parsed.filter(
+            (b) => b && b.id !== 'sample-1' && !b.id.startsWith('sample-') && b.billNumber !== 'MUG-2610-101'
+          );
+          localStorage.setItem(LOCAL_STORAGE_BILLS, JSON.stringify(realBills));
+          return realBills;
         }
       }
     } catch {
       // fallback
     }
-    // Initial sample bill if empty
-    const initialSamples = [
-      {
-        id: 'sample-1',
-        billNumber: 'MUG-2610-101',
-        billDate: dateToday(),
-        customer: { ...DEFAULT_CUSTOMER },
-        items: [...INITIAL_ITEMS],
-        paymentStatus: 'unpaid' as const,
-        createdAt: Date.now() - 86400000,
-        updatedAt: Date.now() - 86400000,
-      },
-    ];
     try {
-      localStorage.setItem(LOCAL_STORAGE_BILLS, JSON.stringify(initialSamples));
+      localStorage.setItem(LOCAL_STORAGE_BILLS, JSON.stringify([]));
     } catch {
       // ignore
     }
-    return initialSamples;
+    return [];
   });
 
   // Persist language
