@@ -4,9 +4,8 @@ import { BillData, BusinessProfile, Language } from '../types/billing';
 import { translations } from '../constants/translations';
 import { formatMoney, formatDateDisplay } from '../constants/defaults';
 import { LogoGraphic } from './LogoGraphic';
-import { WhatsAppShareModal } from './WhatsAppShareModal';
 import { generateInvoicePdf } from '../utils/generatePdfBlob';
-import { Printer, Download, Share2, Copy, Check, ZoomIn, ZoomOut, QrCode, ArrowLeft } from 'lucide-react';
+import { Download, ZoomIn, ZoomOut, QrCode, ArrowLeft } from 'lucide-react';
 
 interface InvoicePreviewProps {
   bill: BillData;
@@ -27,35 +26,14 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
   const invoiceRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [sharingWhatsApp, setSharingWhatsApp] = useState(false);
   const [showUpiQr] = useState(true);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [zoomFit, setZoomFit] = useState(true);
   const [containerWidth, setContainerWidth] = useState<number>(720);
 
-  // WhatsApp share modal state
-  const [shareModalState, setShareModalState] = useState<{
-    isOpen: boolean;
-    fileName: string;
-    clientName: string;
-    contactNumber: string;
-    whatsappUrl: string;
-    canDirectShare: boolean;
-    pdfFile?: File;
-  }>({
-    isOpen: false,
-    fileName: '',
-    clientName: '',
-    contactNumber: '',
-    whatsappUrl: '',
-    canDirectShare: false,
-  });
-
-  // Calculate responsiveness and scale for exact tablet view
+  // Measure container width for responsive scaling on mobile
   useEffect(() => {
-    if (!containerRef.current) return;
     const updateWidth = () => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.clientWidth);
@@ -84,118 +62,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
       .catch((err) => console.error('QR code error', err));
   }, [business.upiId, business.nameEn, total, bill.billNumber]);
 
-  // Build bilingual WhatsApp message
-  const getWhatsAppText = () => {
-    const platformsList = Array.from(new Set(bill.items.flatMap((i) => i.platforms))).join(', ');
-    return language === 'ta'
-      ? `வணக்கம் ${bill.customer.name},\n\n*முகவை விளம்பரம் (Mugavai Ads)* விலைப்பட்டியல்:\n📄 *பில் எண்:* ${bill.billNumber}\n📅 *தேதி:* ${formatDateDisplay(bill.billDate)}\n📱 *விளம்பரத் தளம்:* ${platformsList || 'Social Media'}\n💰 *மொத்தத் தொகை:* ${formatMoney(total)}\n\n💳 *UPI மூலம் செலுத்த:* ${business.upiId}\n\n(இணைக்கப்பட்டுள்ள விலைப்பட்டியல் PDF-ஐ சரிபார்க்கவும்)\nநன்றி!\n${business.nameTa} - ${business.contactTa}`
-      : `Hello ${bill.customer.name},\n\n*Mugavai Ads* Invoice Summary:\n📄 *Invoice No:* ${bill.billNumber}\n📅 *Date:* ${formatDateDisplay(bill.billDate)}\n📱 *Platforms:* ${platformsList || 'Social Media'}\n💰 *Total Amount:* ${formatMoney(total)}\n\n💳 *Pay via UPI:* ${business.upiId}\n\n(Please check the attached Invoice PDF)\nThank you for choosing Mugavai Ads!\n${business.nameEn} - ${business.contact}`;
-  };
-
-  const getWhatsAppUrl = () => {
-    const clientPhone = bill.customer.contact.replace(/\D/g, '');
-    const text = getWhatsAppText();
-    return clientPhone.length >= 10
-      ? `https://wa.me/91${clientPhone.slice(-10)}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
-  };
-
-  // WhatsApp share handler
-  const handleWhatsAppShare = async () => {
-    if (!invoiceRef.current) return;
-    if (onSaveToHistory) onSaveToHistory();
-    setSharingWhatsApp(true);
-
-    try {
-      const { pdf, blob, fileName } = await generateInvoicePdf(invoiceRef.current, bill.billNumber);
-      const whatsappUrl = getWhatsAppUrl();
-      const text = getWhatsAppText();
-      const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
-
-      // Check if native Web Share with files is supported (e.g. Mobile Safari, Android Chrome)
-      const canShareFiles = typeof navigator !== 'undefined' &&
-        !!navigator.canShare &&
-        navigator.canShare({ files: [pdfFile] });
-
-      if (canShareFiles) {
-        try {
-          await navigator.share({
-            files: [pdfFile],
-            title: fileName,
-            text: text,
-          });
-          setSharingWhatsApp(false);
-          return;
-        } catch (err) {
-          // If user aborted or dismissed, we still offer the modal
-          if ((err as Error)?.name === 'AbortError') {
-            setSharingWhatsApp(false);
-            return;
-          }
-        }
-      }
-
-      // If direct file share is not supported or failed (e.g. desktop),
-      // download the PDF and display the guided WhatsApp share modal
-      pdf.save(fileName);
-
-      setShareModalState({
-        isOpen: true,
-        fileName,
-        clientName: bill.customer.name,
-        contactNumber: bill.customer.contact,
-        whatsappUrl,
-        canDirectShare: canShareFiles,
-        pdfFile,
-      });
-    } catch (e) {
-      console.error('WhatsApp PDF generation error', e);
-      window.open(getWhatsAppUrl(), '_blank');
-    } finally {
-      setSharingWhatsApp(false);
-    }
-  };
-
-  // Native share retry from modal
-  const handleTryDirectShareFromModal = async () => {
-    if (!shareModalState.pdfFile) return;
-    try {
-      await navigator.share({
-        files: [shareModalState.pdfFile],
-        title: shareModalState.fileName,
-        text: getWhatsAppText(),
-      });
-      setShareModalState((prev) => ({ ...prev, isOpen: false }));
-    } catch {
-      // ignore
-    }
-  };
-
-  // Re-download from modal
-  const handleDownloadFromModal = async () => {
-    if (!invoiceRef.current) return;
-    const { pdf, fileName } = await generateInvoicePdf(invoiceRef.current, bill.billNumber);
-    pdf.save(fileName);
-  };
-
-  // Copy text summary
-  const handleCopySummary = async () => {
-    const text = `Mugavai Ads Invoice: #${bill.billNumber} | Date: ${formatDateDisplay(bill.billDate)} | Client: ${bill.customer.name} | Total: ${formatMoney(total)} | UPI: ${business.upiId}`;
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // ignore
-    }
-  };
-
-  // Print invoice
-  const handlePrint = () => {
-    if (onSaveToHistory) onSaveToHistory();
-    window.print();
-  };
-
   // Download PDF ensuring exact tablet dimensions on all devices
   const handleDownloadPdf = async () => {
     if (!invoiceRef.current) return;
@@ -206,8 +72,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
       const { pdf, fileName } = await generateInvoicePdf(invoiceRef.current, bill.billNumber);
       pdf.save(fileName);
     } catch (e) {
-      console.error('PDF generation error, falling back to print dialog', e);
-      window.print();
+      console.error('PDF generation error', e);
     } finally {
       setDownloading(false);
     }
@@ -231,20 +96,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
 
   return (
     <div className="space-y-4 pb-20">
-      {/* WhatsApp Sharing Dialog Modal */}
-      <WhatsAppShareModal
-        isOpen={shareModalState.isOpen}
-        onClose={() => setShareModalState((prev) => ({ ...prev, isOpen: false }))}
-        fileName={shareModalState.fileName}
-        clientName={shareModalState.clientName}
-        contactNumber={shareModalState.contactNumber}
-        whatsappUrl={shareModalState.whatsappUrl}
-        language={language}
-        canDirectShare={shareModalState.canDirectShare}
-        onTryDirectShare={handleTryDirectShareFromModal}
-        onDownloadAgain={handleDownloadFromModal}
-      />
-
       {/* Top Controls Bar */}
       <div className="bg-white rounded-xl border border-[#d7e2df] p-3 shadow-xs flex flex-wrap items-center justify-between gap-2.5 no-print">
         {onBackToEdit && (
@@ -284,47 +135,17 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           </button>
         </div>
 
-        {/* Action Buttons: WhatsApp, PDF, Print */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={handleWhatsAppShare}
-            disabled={sharingWhatsApp}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors min-h-[40px] disabled:opacity-60"
-            title={t.shareWhatsApp}
-          >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>{sharingWhatsApp ? 'Preparing...' : 'WhatsApp'}</span>
-          </button>
-
+        {/* Primary Action Button: Download PDF */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleDownloadPdf}
             disabled={downloading}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#176b5b] hover:bg-[#145a4d] text-white text-xs font-bold shadow-xs transition-colors min-h-[40px] disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#176b5b] hover:bg-[#145a4d] text-white text-xs font-bold shadow-xs transition-colors min-h-[40px] disabled:opacity-60"
             title={t.download}
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>{downloading ? 'PDF...' : 'PDF'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#d7e2df] bg-white hover:bg-slate-50 text-[#183b36] text-xs font-bold shadow-xs transition-colors min-h-[40px]"
-            title={t.print}
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span>{t.print}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleCopySummary}
-            className="p-2 rounded-lg border border-[#d7e2df] bg-white hover:bg-slate-50 text-slate-700 text-xs min-h-[40px] min-w-[40px] flex items-center justify-center transition-colors"
-            title={t.copySummary}
-          >
-            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+            <Download className="w-4 h-4" />
+            <span>{downloading ? (language === 'ta' ? 'பதிவிறக்கம் செய்கிறது...' : 'Generating PDF...') : t.download}</span>
           </button>
         </div>
       </div>
@@ -346,19 +167,24 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           <div
             ref={invoiceRef}
             id="invoice"
-            className="bg-white text-[#182b27] mx-auto p-5 sm:p-6 border border-[#e4eae8] rounded-md font-sans text-[10px] leading-snug w-[720px] min-w-[720px] max-w-[720px] shadow-xs"
-            style={{ boxSizing: 'border-box' }}
+            className="bg-white text-[#182b27] p-6 border border-[#e4eae8] rounded-md font-sans text-[10px] leading-snug"
+            style={{
+              width: `${TABLET_WIDTH}px`,
+              minWidth: `${TABLET_WIDTH}px`,
+              maxWidth: `${TABLET_WIDTH}px`,
+              boxSizing: 'border-box',
+            }}
           >
             {/* Invoice Header */}
-            <div className="invoice-header flex items-start justify-between gap-3 border-b-2 border-[#176b5b] pb-2.5 mb-2.5">
-              <div className="business flex-1 min-w-0">
-                <h2 className={`text-lg sm:text-xl font-black text-[#183b36] tracking-tight mb-0.5 ${language === 'ta' ? 'tamil-font' : ''}`}>
+            <div className="flex items-start justify-between gap-4 border-b-2 border-[#176b5b] pb-3 mb-3">
+              <div className="flex-1 min-w-0">
+                <h2 className={`text-xl font-black text-[#183b36] tracking-tight mb-1 ${language === 'ta' ? 'tamil-font' : ''}`}>
                   {businessName}
                 </h2>
                 <p className="text-[10px] text-slate-600 leading-tight">{businessStreet}</p>
                 <p className="text-[10px] text-slate-600 leading-tight">{businessPlace}</p>
                 <p className="text-[10px] text-slate-600 leading-tight">{businessState}</p>
-                <p className="text-[10px] font-semibold text-slate-700 mt-0.5">{businessContact}</p>
+                <p className="text-[10px] font-semibold text-slate-700 mt-1">{businessContact}</p>
                 <p className="text-[9px] text-slate-500 leading-tight">{businessEmail}</p>
                 <p className="text-[9px] text-slate-500 leading-tight">{businessInstagram}</p>
               </div>
@@ -368,16 +194,16 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
             </div>
 
             {/* Invoice Title & Meta */}
-            <div className="invoice-title flex items-center justify-between gap-3 my-2 pb-1.5 border-b border-slate-100">
+            <div className="flex items-center justify-between gap-4 my-2.5 pb-2 border-b border-slate-100">
               <div>
-                <h3 className={`text-base sm:text-lg font-black text-[#183b36] tracking-wide ${language === 'ta' ? 'tamil-font' : ''}`}>
+                <h3 className={`text-lg font-black text-[#183b36] tracking-wide ${language === 'ta' ? 'tamil-font' : ''}`}>
                   {t.invoice}
                 </h3>
                 <span className="text-[9px] text-slate-400 font-medium tracking-wider uppercase">
                   Original Client Copy
                 </span>
               </div>
-              <div className="bill-meta text-right text-[10px] space-y-0.5">
+              <div className="text-right text-[10px] space-y-0.5">
                 <div>
                   <strong className="text-[#183b36]">{t.billNumberLabel}</strong>{' '}
                   <span className="font-mono font-bold text-slate-900">{bill.billNumber || '—'}</span>
@@ -389,12 +215,12 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
               </div>
             </div>
 
-            {/* Customer Details Block - Always exact 2-column tablet grid */}
-            <div className="customer-block border border-[#d7e2df] bg-[#f9fbfa] rounded-lg p-2.5 mb-2.5">
-              <h4 className={`text-[10px] font-bold text-[#176b5b] uppercase tracking-wider mb-1 ${language === 'ta' ? 'tamil-font' : ''}`}>
+            {/* Customer Details Block */}
+            <div className="customer-block border border-[#d7e2df] bg-[#f9fbfa] rounded-lg p-3 mb-3">
+              <h4 className={`text-[10px] font-bold text-[#176b5b] uppercase tracking-wider mb-1.5 ${language === 'ta' ? 'tamil-font' : ''}`}>
                 {t.customerTitle}
               </h4>
-              <div className="customer-grid grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px]">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[10px]">
                 <div>
                   <strong className="text-slate-700">{t.name}:</strong>{' '}
                   <span className="font-semibold text-slate-900">{bill.customer.name || '—'}</span>
@@ -433,26 +259,26 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
             </div>
 
             {/* Items Table */}
-            <div className="mb-2.5 overflow-x-auto">
-              <table className="invoice-table w-full border-collapse text-[10px] leading-tight">
+            <div className="mb-3">
+              <table className="w-full border-collapse text-[10px] leading-tight">
                 <thead>
                   <tr className="bg-[#edf6f3] text-[#183b36] border-y border-[#bacbc5]">
-                    <th className="py-1.5 px-2 text-center w-[7%] border-r border-[#bacbc5] font-bold">
+                    <th className="py-2 px-2 text-center w-[7%] border-r border-[#bacbc5] font-bold">
                       {t.sno}
                     </th>
-                    <th className="py-1.5 px-2 text-left w-[36%] border-r border-[#bacbc5] font-bold">
+                    <th className="py-2 px-3 text-left w-[36%] border-r border-[#bacbc5] font-bold">
                       {t.description}
                     </th>
-                    <th className="py-1.5 px-2 text-left w-[20%] border-r border-[#bacbc5] font-bold">
+                    <th className="py-2 px-2 text-left w-[20%] border-r border-[#bacbc5] font-bold">
                       {t.platform}
                     </th>
-                    <th className="py-1.5 px-1.5 text-center w-[12%] border-r border-[#bacbc5] font-bold">
+                    <th className="py-2 px-2 text-center w-[12%] border-r border-[#bacbc5] font-bold">
                       {t.fromDate}
                     </th>
-                    <th className="py-1.5 px-1.5 text-center w-[12%] border-r border-[#bacbc5] font-bold">
+                    <th className="py-2 px-2 text-center w-[12%] border-r border-[#bacbc5] font-bold">
                       {t.toDate}
                     </th>
-                    <th className="py-1.5 px-2 text-right w-[13%] font-bold">
+                    <th className="py-2 px-3 text-right w-[13%] font-bold">
                       {t.amount}
                     </th>
                   </tr>
@@ -460,29 +286,29 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
                 <tbody>
                   {bill.items.map((item, idx) => (
                     <tr key={item.id || idx} className="border-b border-[#e1e9e6]">
-                      <td className="py-1.5 px-2 text-center border-r border-[#e1e9e6] font-semibold text-[#176b5b]">
+                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] font-semibold text-[#176b5b]">
                         {idx + 1}
                       </td>
-                      <td className="py-1.5 px-2 border-r border-[#e1e9e6] font-medium text-slate-900 break-words">
+                      <td className="py-2 px-3 border-r border-[#e1e9e6] font-medium text-slate-900 break-words">
                         {item.description || '—'}
                       </td>
-                      <td className="py-1.5 px-2 border-r border-[#e1e9e6] text-slate-700">
+                      <td className="py-2 px-2 border-r border-[#e1e9e6] text-slate-700">
                         {item.platforms.join(', ') || '—'}
                       </td>
-                      <td className="py-1.5 px-1.5 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
+                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
                         {formatDateDisplay(item.fromDate)}
                       </td>
-                      <td className="py-1.5 px-1.5 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
+                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
                         {formatDateDisplay(item.toDate)}
                       </td>
-                      <td className="py-1.5 px-2 text-right font-bold font-mono text-slate-900 whitespace-nowrap">
+                      <td className="py-2 px-3 text-right font-bold font-mono text-slate-900 whitespace-nowrap">
                         {formatMoney(item.amount)}
                       </td>
                     </tr>
                   ))}
                   {bill.items.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="py-3 text-center text-slate-400">
+                      <td colSpan={6} className="py-4 text-center text-slate-400">
                         — No items added —
                       </td>
                     </tr>
@@ -491,11 +317,11 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
               </table>
             </div>
 
-            {/* Bottom Summary: UPI QR & Total Box - Always exact row layout */}
-            <div className="total-row flex items-center justify-between gap-3 mt-2.5 pt-1">
+            {/* Bottom Summary: UPI QR & Total Box */}
+            <div className="total-row flex items-center justify-between gap-4 mt-3 pt-1">
               {/* UPI QR Payment Block */}
-              {business.upiId && showUpiQr && qrDataUrl && (
-                <div className="flex items-center gap-2.5 p-1.5 bg-[#f4f8f7] border border-[#d7e2df] rounded-lg">
+              {business.upiId && showUpiQr && qrDataUrl ? (
+                <div className="flex items-center gap-3 p-2 bg-[#f4f8f7] border border-[#d7e2df] rounded-lg">
                   <img src={qrDataUrl} alt="UPI Payment QR" className="w-14 h-14 rounded bg-white p-0.5 border border-slate-200 shrink-0" />
                   <div className="text-[9px] space-y-0.5">
                     <div className="font-bold text-[#183b36] flex items-center gap-1">
@@ -506,14 +332,14 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
                     <div className="text-[8px] text-emerald-700 font-medium">GPay • PhonePe • Paytm</div>
                   </div>
                 </div>
-              )}
+              ) : <div />}
 
               {/* Total Box */}
-              <div className="total-box min-w-[190px] ml-auto border border-[#176b5b] bg-[#edf6f3] p-2.5 rounded-lg text-right">
-                <div className="total-label text-[9px] font-bold text-[#183b36] uppercase tracking-wider">
+              <div className="min-w-[200px] border border-[#176b5b] bg-[#edf6f3] p-3 rounded-lg text-right">
+                <div className="text-[9px] font-bold text-[#183b36] uppercase tracking-wider">
                   {t.totalLabel}
                 </div>
-                <div className="total-value text-xl font-black text-[#176b5b] mt-0.5 tabular-nums font-mono">
+                <div className="text-2xl font-black text-[#176b5b] mt-0.5 tabular-nums font-mono">
                   {formatMoney(total)}
                 </div>
                 <div className="text-[8px] text-slate-500 mt-0.5">
@@ -523,8 +349,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
             </div>
 
             {/* Authorized Signature */}
-            <div className="signature flex justify-end mt-6 mb-2">
-              <div className="w-40 text-center border-t border-slate-400 pt-1">
+            <div className="signature flex justify-end mt-7 mb-2">
+              <div className="w-44 text-center border-t border-slate-400 pt-1.5">
                 <span className={`text-[10px] font-bold text-slate-800 ${language === 'ta' ? 'tamil-font' : ''}`}>
                   {signatureText}
                 </span>
@@ -533,7 +359,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
             </div>
 
             {/* Footer Note */}
-            <div className="invoice-footer border-t border-[#e0e8e5] pt-2 text-center text-slate-500 text-[9px]">
+            <div className="border-t border-[#e0e8e5] pt-2 text-center text-slate-500 text-[9px]">
               <p className={language === 'ta' ? 'tamil-font font-medium' : ''}>{footerText}</p>
             </div>
           </div>
