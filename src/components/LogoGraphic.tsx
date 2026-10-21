@@ -6,7 +6,7 @@ interface LogoGraphicProps {
   size?: number;
 }
 
-export const LogoGraphic: React.FC<LogoGraphicProps> = ({ url, className = '', size = 72 }) => {
+export const LogoGraphic: React.FC<LogoGraphicProps> = ({ url, className = '', size = 64 }) => {
   const [loadError, setLoadError] = useState(false);
 
   if (url && !loadError) {
@@ -18,7 +18,16 @@ export const LogoGraphic: React.FC<LogoGraphicProps> = ({ url, className = '', s
         referrerPolicy="no-referrer"
         onError={() => setLoadError(true)}
         className={`object-contain rounded-lg border border-[#d7e2df] bg-white ${className}`}
-        style={{ width: size, height: size }}
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          maxWidth: '100%',
+          display: 'block',
+          objectFit: 'contain',
+          borderRadius: '8px',
+          border: '1px solid #d7e2df',
+          backgroundColor: '#ffffff',
+        }}
       />
     );
   }
@@ -26,19 +35,47 @@ export const LogoGraphic: React.FC<LogoGraphicProps> = ({ url, className = '', s
   // Fallback high-fidelity brand emblem
   return (
     <div
-      className={`flex flex-col items-center justify-center rounded-xl bg-gradient-to-br from-[#183b36] to-[#0f2925] text-white shadow-sm border border-[#176b5b]/30 p-2 text-center select-none ${className}`}
-      style={{ width: size, height: size, minWidth: size, minHeight: size }}
+      className={`select-none ${className}`}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        minWidth: `${size}px`,
+        minHeight: `${size}px`,
+        backgroundColor: '#183b36',
+        color: '#ffffff',
+        borderRadius: '8px',
+        border: '1px solid #176b5b',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '6px',
+        textAlign: 'center',
+        boxSizing: 'border-box',
+      }}
       title="Mugavai Ads"
     >
-      <div className="w-6 h-6 rounded-full bg-[#176b5b] flex items-center justify-center mb-1 text-white">
-        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <div
+        style={{
+          width: '24px',
+          height: '24px',
+          borderRadius: '9999px',
+          backgroundColor: '#176b5b',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '3px',
+          color: '#ffffff',
+        }}
+      >
+        <svg style={{ width: '13px', height: '13px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
         </svg>
       </div>
-      <span className="text-[10px] font-extrabold uppercase tracking-tight leading-none text-emerald-300">
+      <span style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, color: '#6ee7b7' }}>
         MUGAVAI
       </span>
-      <span className="text-[8px] font-semibold text-emerald-100 tracking-wider">
+      <span style={{ fontSize: '7.5px', fontWeight: 700, color: '#d1fae5', letterSpacing: '0.05em' }}>
         ADS
       </span>
     </div>

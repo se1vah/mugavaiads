@@ -50,14 +50,14 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
     return sum + val;
   }, 0);
 
-  // Generate UPI QR code
+  // Generate UPI QR code as Data URL
   useEffect(() => {
     if (!business.upiId || total <= 0) return;
     const upiUrl = `upi://pay?pa=${encodeURIComponent(business.upiId)}&pn=${encodeURIComponent(
       business.nameEn
     )}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Invoice ${bill.billNumber}`)}`;
 
-    QRCode.toDataURL(upiUrl, { width: 120, margin: 1, color: { dark: '#183b36', light: '#ffffff' } })
+    QRCode.toDataURL(upiUrl, { width: 130, margin: 1, color: { dark: '#183b36', light: '#ffffff' } })
       .then((url) => setQrDataUrl(url))
       .catch((err) => console.error('QR code error', err));
   }, [business.upiId, business.nameEn, total, bill.billNumber]);
@@ -164,151 +164,391 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           }}
           className="transition-transform duration-150 shrink-0"
         >
+          {/* Main Invoice Document with Complete Explicit Inline Styles and Embedded CSS */}
           <div
             ref={invoiceRef}
             id="invoice"
-            className="bg-white text-[#182b27] p-6 border border-[#e4eae8] rounded-md font-sans text-[10px] leading-snug"
             style={{
               width: `${TABLET_WIDTH}px`,
               minWidth: `${TABLET_WIDTH}px`,
               maxWidth: `${TABLET_WIDTH}px`,
+              backgroundColor: '#ffffff',
+              color: '#182b27',
+              padding: '24px',
+              border: '1px solid #e4eae8',
+              borderRadius: '6px',
+              fontFamily: "'Plus Jakarta Sans', 'Inter', 'Noto Sans Tamil', -apple-system, sans-serif",
+              fontSize: '10px',
+              lineHeight: 1.45,
               boxSizing: 'border-box',
             }}
           >
-            {/* Invoice Header */}
-            <div className="flex items-start justify-between gap-4 border-b-2 border-[#176b5b] pb-3 mb-3">
-              <div className="flex-1 min-w-0">
-                <h2 className={`text-xl font-black text-[#183b36] tracking-tight mb-1 ${language === 'ta' ? 'tamil-font' : ''}`}>
+            {/* Scoped CSS guaranteeing styles are locked in even if captured or printed */}
+            <style>{`
+              #invoice {
+                background: #ffffff !important;
+                color: #182b27 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              #invoice .inv-header {
+                display: flex !important;
+                align-items: flex-start !important;
+                justify-content: space-between !important;
+                gap: 16px !important;
+                border-bottom: 2px solid #176b5b !important;
+                padding-bottom: 12px !important;
+                margin-bottom: 12px !important;
+              }
+              #invoice .inv-business-title {
+                font-size: 20px !important;
+                font-weight: 900 !important;
+                color: #183b36 !important;
+                line-height: 1.25 !important;
+                margin: 0 0 4px 0 !important;
+              }
+              #invoice .inv-business-sub {
+                font-size: 10px !important;
+                color: #4e605b !important;
+                line-height: 1.4 !important;
+                margin: 2px 0 !important;
+              }
+              #invoice .inv-title-bar {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 16px !important;
+                margin: 10px 0 !important;
+                padding-bottom: 8px !important;
+                border-bottom: 1px solid #f1f5f9 !important;
+              }
+              #invoice .inv-customer-box {
+                border: 1px solid #d7e2df !important;
+                background-color: #f9fbfa !important;
+                border-radius: 6px !important;
+                padding: 10px 14px !important;
+                margin-bottom: 12px !important;
+              }
+              #invoice .inv-customer-heading {
+                font-size: 10.5px !important;
+                font-weight: 700 !important;
+                color: #176b5b !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.04em !important;
+                margin: 0 0 6px 0 !important;
+              }
+              #invoice .inv-customer-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                column-gap: 24px !important;
+                row-gap: 4px !important;
+                font-size: 10px !important;
+                line-height: 1.45 !important;
+              }
+              #invoice .inv-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                table-layout: fixed !important;
+                font-size: 10px !important;
+                margin-bottom: 12px !important;
+              }
+              #invoice .inv-table th {
+                background-color: #edf6f3 !important;
+                color: #183b36 !important;
+                font-weight: 700 !important;
+                border: 1px solid #bacbc5 !important;
+                padding: 7px 6px !important;
+                text-align: left !important;
+              }
+              #invoice .inv-table td {
+                border: 1px solid #bacbc5 !important;
+                padding: 7px 6px !important;
+                text-align: left !important;
+                background-color: #ffffff !important;
+              }
+              #invoice .inv-total-row {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 16px !important;
+                margin-top: 12px !important;
+              }
+              #invoice .inv-upi-box {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                padding: 8px 12px !important;
+                background-color: #f4f8f7 !important;
+                border: 1px solid #d7e2df !important;
+                border-radius: 8px !important;
+              }
+              #invoice .inv-total-box {
+                min-width: 200px !important;
+                margin-left: auto !important;
+                border: 1px solid #176b5b !important;
+                background-color: #edf6f3 !important;
+                padding: 10px 14px !important;
+                border-radius: 6px !important;
+                text-align: right !important;
+              }
+              #invoice .inv-signature {
+                display: flex !important;
+                justify-content: flex-end !important;
+                margin-top: 28px !important;
+                margin-bottom: 8px !important;
+              }
+              #invoice .inv-sig-line {
+                width: 175px !important;
+                text-align: center !important;
+                border-top: 1px solid #6d7e79 !important;
+                padding-top: 6px !important;
+                font-weight: 600 !important;
+              }
+              #invoice .inv-footer {
+                border-top: 1px solid #e0e8e5 !important;
+                margin-top: 16px !important;
+                padding-top: 8px !important;
+                color: #72817d !important;
+                font-size: 9px !important;
+                text-align: center !important;
+              }
+            `}</style>
+
+            {/* 1. Invoice Header */}
+            <div
+              className="inv-header"
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: '16px',
+                borderBottom: '2px solid #176b5b',
+                paddingBottom: '12px',
+                marginBottom: '12px',
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h2
+                  className="inv-business-title"
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 900,
+                    color: '#183b36',
+                    margin: '0 0 4px 0',
+                    lineHeight: 1.25,
+                  }}
+                >
                   {businessName}
                 </h2>
-                <p className="text-[10px] text-slate-600 leading-tight">{businessStreet}</p>
-                <p className="text-[10px] text-slate-600 leading-tight">{businessPlace}</p>
-                <p className="text-[10px] text-slate-600 leading-tight">{businessState}</p>
-                <p className="text-[10px] font-semibold text-slate-700 mt-1">{businessContact}</p>
-                <p className="text-[9px] text-slate-500 leading-tight">{businessEmail}</p>
-                <p className="text-[9px] text-slate-500 leading-tight">{businessInstagram}</p>
+                <p className="inv-business-sub" style={{ fontSize: '10px', color: '#4e605b', margin: '2px 0', lineHeight: 1.4 }}>
+                  {businessStreet}
+                </p>
+                <p className="inv-business-sub" style={{ fontSize: '10px', color: '#4e605b', margin: '2px 0', lineHeight: 1.4 }}>
+                  {businessPlace}
+                </p>
+                <p className="inv-business-sub" style={{ fontSize: '10px', color: '#4e605b', margin: '2px 0', lineHeight: 1.4 }}>
+                  {businessState}
+                </p>
+                <p style={{ fontSize: '10px', fontWeight: 600, color: '#1f2937', margin: '3px 0' }}>
+                  {businessContact}
+                </p>
+                <p className="inv-business-sub" style={{ fontSize: '9px', color: '#64748b', margin: '1px 0' }}>
+                  {businessEmail}
+                </p>
+                <p className="inv-business-sub" style={{ fontSize: '9px', color: '#64748b', margin: '1px 0' }}>
+                  {businessInstagram}
+                </p>
               </div>
-              <div className="shrink-0">
+              <div style={{ flexShrink: 0 }}>
                 <LogoGraphic url={business.logoUrl} size={64} />
               </div>
             </div>
 
-            {/* Invoice Title & Meta */}
-            <div className="flex items-center justify-between gap-4 my-2.5 pb-2 border-b border-slate-100">
+            {/* 2. Invoice Title & Meta */}
+            <div
+              className="inv-title-bar"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                margin: '10px 0',
+                paddingBottom: '8px',
+                borderBottom: '1px solid #f1f5f9',
+              }}
+            >
               <div>
-                <h3 className={`text-lg font-black text-[#183b36] tracking-wide ${language === 'ta' ? 'tamil-font' : ''}`}>
+                <h3
+                  style={{
+                    fontSize: '18px',
+                    fontWeight: 900,
+                    color: '#183b36',
+                    margin: 0,
+                    letterSpacing: '0.04em',
+                  }}
+                >
                   {t.invoice}
                 </h3>
-                <span className="text-[9px] text-slate-400 font-medium tracking-wider uppercase">
+                <span
+                  style={{
+                    fontSize: '9px',
+                    color: '#94a3b8',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Original Client Copy
                 </span>
               </div>
-              <div className="text-right text-[10px] space-y-0.5">
+              <div style={{ textAlign: 'right', fontSize: '10px', lineHeight: 1.5 }}>
                 <div>
-                  <strong className="text-[#183b36]">{t.billNumberLabel}</strong>{' '}
-                  <span className="font-mono font-bold text-slate-900">{bill.billNumber || '—'}</span>
+                  <strong style={{ color: '#183b36' }}>{t.billNumberLabel}</strong>{' '}
+                  <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0f172a' }}>
+                    {bill.billNumber || '—'}
+                  </span>
                 </div>
                 <div>
-                  <strong className="text-[#183b36]">{t.billDateLabel}</strong>{' '}
-                  <span className="font-semibold text-slate-800">{formatDateDisplay(bill.billDate)}</span>
+                  <strong style={{ color: '#183b36' }}>{t.billDateLabel}</strong>{' '}
+                  <span style={{ fontWeight: 600, color: '#334155' }}>
+                    {formatDateDisplay(bill.billDate)}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Customer Details Block */}
-            <div className="customer-block border border-[#d7e2df] bg-[#f9fbfa] rounded-lg p-3 mb-3">
-              <h4 className={`text-[10px] font-bold text-[#176b5b] uppercase tracking-wider mb-1.5 ${language === 'ta' ? 'tamil-font' : ''}`}>
+            {/* 3. Customer Details Block */}
+            <div
+              className="inv-customer-box"
+              style={{
+                border: '1px solid #d7e2df',
+                backgroundColor: '#f9fbfa',
+                borderRadius: '6px',
+                padding: '10px 14px',
+                marginBottom: '12px',
+              }}
+            >
+              <h4
+                className="inv-customer-heading"
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: 700,
+                  color: '#176b5b',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  margin: '0 0 6px 0',
+                }}
+              >
                 {t.customerTitle}
               </h4>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[10px]">
+              <div
+                className="inv-customer-grid"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  columnGap: '24px',
+                  rowGap: '4px',
+                  fontSize: '10px',
+                  lineHeight: 1.45,
+                }}
+              >
                 <div>
-                  <strong className="text-slate-700">{t.name}:</strong>{' '}
-                  <span className="font-semibold text-slate-900">{bill.customer.name || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.name}:</strong>{' '}
+                  <span style={{ fontWeight: 600, color: '#0f172a' }}>{bill.customer.name || '—'}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-700">{t.contactLabel}:</strong>{' '}
-                  <span className="font-mono font-medium text-slate-900">{bill.customer.contact || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.contactLabel}:</strong>{' '}
+                  <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#0f172a' }}>{bill.customer.contact || '—'}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-700">{t.streetLabel}:</strong>{' '}
-                  <span className="text-slate-800">{bill.customer.street || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.streetLabel}:</strong>{' '}
+                  <span style={{ color: '#334155' }}>{bill.customer.street || '—'}</span>
                 </div>
                 {bill.customer.email && (
                   <div>
-                    <strong className="text-slate-700">{t.emailLabel}:</strong>{' '}
-                    <span className="text-slate-800">{bill.customer.email}</span>
+                    <strong style={{ color: '#40534e' }}>{t.emailLabel}:</strong>{' '}
+                    <span style={{ color: '#334155' }}>{bill.customer.email}</span>
                   </div>
                 )}
                 <div>
-                  <strong className="text-slate-700">{t.placeLabel}:</strong>{' '}
-                  <span className="text-slate-800">{bill.customer.place || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.placeLabel}:</strong>{' '}
+                  <span style={{ color: '#334155' }}>{bill.customer.place || '—'}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-700">{t.districtLabel}:</strong>{' '}
-                  <span className="text-slate-800">{bill.customer.district || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.districtLabel}:</strong>{' '}
+                  <span style={{ color: '#334155' }}>{bill.customer.district || '—'}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-700">{t.stateLabel}:</strong>{' '}
-                  <span className="text-slate-800">{bill.customer.state || 'Tamil Nadu'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.stateLabel}:</strong>{' '}
+                  <span style={{ color: '#334155' }}>{bill.customer.state || 'Tamil Nadu'}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-700">{t.pinLabel}:</strong>{' '}
-                  <span className="font-mono text-slate-800">{bill.customer.pincode || '—'}</span>
+                  <strong style={{ color: '#40534e' }}>{t.pinLabel}:</strong>{' '}
+                  <span style={{ fontFamily: 'monospace', color: '#334155' }}>{bill.customer.pincode || '—'}</span>
                 </div>
               </div>
             </div>
 
-            {/* Items Table */}
-            <div className="mb-3">
-              <table className="w-full border-collapse text-[10px] leading-tight">
+            {/* 4. Items Table */}
+            <div style={{ marginBottom: '12px' }}>
+              <table
+                className="inv-table"
+                style={{
+                  width: '100%',
+                  borderCollapse: 'collapse',
+                  tableLayout: 'fixed',
+                  fontSize: '10px',
+                  marginBottom: '12px',
+                }}
+              >
                 <thead>
-                  <tr className="bg-[#edf6f3] text-[#183b36] border-y border-[#bacbc5]">
-                    <th className="py-2 px-2 text-center w-[7%] border-r border-[#bacbc5] font-bold">
+                  <tr style={{ backgroundColor: '#edf6f3', color: '#183b36', borderTop: '1px solid #bacbc5', borderBottom: '1px solid #bacbc5' }}>
+                    <th style={{ padding: '7px 6px', textAlign: 'center', width: '7%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.sno}
                     </th>
-                    <th className="py-2 px-3 text-left w-[36%] border-r border-[#bacbc5] font-bold">
+                    <th style={{ padding: '7px 8px', textAlign: 'left', width: '36%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.description}
                     </th>
-                    <th className="py-2 px-2 text-left w-[20%] border-r border-[#bacbc5] font-bold">
+                    <th style={{ padding: '7px 6px', textAlign: 'left', width: '20%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.platform}
                     </th>
-                    <th className="py-2 px-2 text-center w-[12%] border-r border-[#bacbc5] font-bold">
+                    <th style={{ padding: '7px 6px', textAlign: 'center', width: '12%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.fromDate}
                     </th>
-                    <th className="py-2 px-2 text-center w-[12%] border-r border-[#bacbc5] font-bold">
+                    <th style={{ padding: '7px 6px', textAlign: 'center', width: '12%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.toDate}
                     </th>
-                    <th className="py-2 px-3 text-right w-[13%] font-bold">
+                    <th style={{ padding: '7px 8px', textAlign: 'right', width: '13%', border: '1px solid #bacbc5', fontWeight: 700, backgroundColor: '#edf6f3' }}>
                       {t.amount}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {bill.items.map((item, idx) => (
-                    <tr key={item.id || idx} className="border-b border-[#e1e9e6]">
-                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] font-semibold text-[#176b5b]">
+                    <tr key={item.id || idx} style={{ borderBottom: '1px solid #bacbc5' }}>
+                      <td style={{ padding: '7px 6px', textAlign: 'center', border: '1px solid #bacbc5', fontWeight: 600, color: '#176b5b' }}>
                         {idx + 1}
                       </td>
-                      <td className="py-2 px-3 border-r border-[#e1e9e6] font-medium text-slate-900 break-words">
+                      <td style={{ padding: '7px 8px', border: '1px solid #bacbc5', fontWeight: 500, color: '#0f172a', wordBreak: 'break-word' }}>
                         {item.description || '—'}
                       </td>
-                      <td className="py-2 px-2 border-r border-[#e1e9e6] text-slate-700">
+                      <td style={{ padding: '7px 6px', border: '1px solid #bacbc5', color: '#334155' }}>
                         {item.platforms.join(', ') || '—'}
                       </td>
-                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
+                      <td style={{ padding: '7px 6px', textAlign: 'center', border: '1px solid #bacbc5', color: '#334155', whiteSpace: 'nowrap' }}>
                         {formatDateDisplay(item.fromDate)}
                       </td>
-                      <td className="py-2 px-2 text-center border-r border-[#e1e9e6] text-slate-700 whitespace-nowrap">
+                      <td style={{ padding: '7px 6px', textAlign: 'center', border: '1px solid #bacbc5', color: '#334155', whiteSpace: 'nowrap' }}>
                         {formatDateDisplay(item.toDate)}
                       </td>
-                      <td className="py-2 px-3 text-right font-bold font-mono text-slate-900 whitespace-nowrap">
+                      <td style={{ padding: '7px 8px', textAlign: 'right', border: '1px solid #bacbc5', fontWeight: 700, fontFamily: 'monospace', color: '#0f172a', whiteSpace: 'nowrap' }}>
                         {formatMoney(item.amount)}
                       </td>
                     </tr>
                   ))}
                   {bill.items.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="py-4 text-center text-slate-400">
+                      <td colSpan={6} style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', border: '1px solid #bacbc5' }}>
                         — No items added —
                       </td>
                     </tr>
@@ -317,50 +557,140 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
               </table>
             </div>
 
-            {/* Bottom Summary: UPI QR & Total Box */}
-            <div className="total-row flex items-center justify-between gap-4 mt-3 pt-1">
+            {/* 5. Bottom Summary: UPI QR & Total Box */}
+            <div
+              className="inv-total-row"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                marginTop: '12px',
+                paddingTop: '4px',
+              }}
+            >
               {/* UPI QR Payment Block */}
               {business.upiId && showUpiQr && qrDataUrl ? (
-                <div className="flex items-center gap-3 p-2 bg-[#f4f8f7] border border-[#d7e2df] rounded-lg">
-                  <img src={qrDataUrl} alt="UPI Payment QR" className="w-14 h-14 rounded bg-white p-0.5 border border-slate-200 shrink-0" />
-                  <div className="text-[9px] space-y-0.5">
-                    <div className="font-bold text-[#183b36] flex items-center gap-1">
-                      <QrCode className="w-3 h-3 text-[#176b5b]" />
+                <div
+                  className="inv-upi-box"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '8px 12px',
+                    backgroundColor: '#f4f8f7',
+                    border: '1px solid #d7e2df',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <img
+                    src={qrDataUrl}
+                    alt="UPI Payment QR"
+                    style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '4px',
+                      backgroundColor: '#ffffff',
+                      padding: '2px',
+                      border: '1px solid #cbd5e1',
+                      display: 'block',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <div style={{ fontSize: '9px', lineHeight: 1.4 }}>
+                    <div style={{ fontWeight: 700, color: '#183b36', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <QrCode style={{ width: '12px', height: '12px', color: '#176b5b' }} />
                       <span>Instant UPI Payment</span>
                     </div>
-                    <div className="text-slate-600 font-mono text-[9px]">{business.upiId}</div>
-                    <div className="text-[8px] text-emerald-700 font-medium">GPay • PhonePe • Paytm</div>
+                    <div style={{ color: '#475569', fontFamily: 'monospace', fontSize: '9px' }}>{business.upiId}</div>
+                    <div style={{ fontSize: '8.5px', color: '#047857', fontWeight: 600 }}>GPay • PhonePe • Paytm</div>
                   </div>
                 </div>
-              ) : <div />}
+              ) : (
+                <div />
+              )}
 
               {/* Total Box */}
-              <div className="min-w-[200px] border border-[#176b5b] bg-[#edf6f3] p-3 rounded-lg text-right">
-                <div className="text-[9px] font-bold text-[#183b36] uppercase tracking-wider">
+              <div
+                className="inv-total-box"
+                style={{
+                  minWidth: '200px',
+                  marginLeft: 'auto',
+                  border: '1px solid #176b5b',
+                  backgroundColor: '#edf6f3',
+                  padding: '10px 14px',
+                  borderRadius: '6px',
+                  textAlign: 'right',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    color: '#183b36',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   {t.totalLabel}
                 </div>
-                <div className="text-2xl font-black text-[#176b5b] mt-0.5 tabular-nums font-mono">
+                <div
+                  style={{
+                    fontSize: '22px',
+                    fontWeight: 900,
+                    color: '#176b5b',
+                    margin: '2px 0',
+                    fontFamily: 'monospace',
+                  }}
+                >
                   {formatMoney(total)}
                 </div>
-                <div className="text-[8px] text-slate-500 mt-0.5">
+                <div style={{ fontSize: '8.5px', color: '#64748b', marginTop: '2px' }}>
                   {language === 'ta' ? 'வரி விலக்கு அளிக்கப்பட்டது (GST இல்லை)' : 'Exempt / No GST Included'}
                 </div>
               </div>
             </div>
 
-            {/* Authorized Signature */}
-            <div className="signature flex justify-end mt-7 mb-2">
-              <div className="w-44 text-center border-t border-slate-400 pt-1.5">
-                <span className={`text-[10px] font-bold text-slate-800 ${language === 'ta' ? 'tamil-font' : ''}`}>
+            {/* 6. Authorized Signature */}
+            <div
+              className="inv-signature"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: '28px',
+                marginBottom: '8px',
+              }}
+            >
+              <div
+                className="inv-sig-line"
+                style={{
+                  width: '175px',
+                  textAlign: 'center',
+                  borderTop: '1px solid #6d7e79',
+                  paddingTop: '6px',
+                  fontWeight: 600,
+                }}
+              >
+                <span style={{ fontSize: '10px', fontWeight: 700, color: '#1f2937' }}>
                   {signatureText}
                 </span>
-                <div className="text-[8px] text-slate-500 font-medium">Mugavai Ads</div>
+                <div style={{ fontSize: '8.5px', color: '#64748b', fontWeight: 500, marginTop: '1px' }}>Mugavai Ads</div>
               </div>
             </div>
 
-            {/* Footer Note */}
-            <div className="border-t border-[#e0e8e5] pt-2 text-center text-slate-500 text-[9px]">
-              <p className={language === 'ta' ? 'tamil-font font-medium' : ''}>{footerText}</p>
+            {/* 7. Footer Note */}
+            <div
+              className="inv-footer"
+              style={{
+                borderTop: '1px solid #e0e8e5',
+                marginTop: '16px',
+                paddingTop: '8px',
+                color: '#72817d',
+                fontSize: '9px',
+                textAlign: 'center',
+              }}
+            >
+              <p style={{ margin: 0 }}>{footerText}</p>
             </div>
           </div>
         </div>
