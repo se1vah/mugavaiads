@@ -1,0 +1,6 @@
+{
+  "name": "Mugavai Ads Mobile Billing",
+  "description": "Bilingual mobile invoice generator and billing manager for Mugavai Ads (முகவை விளம்பரம்), featuring instant A4 invoice preview, PDF download, WhatsApp sharing, and UPI QR payments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mugavai Ads | Billing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--ink:#183b36;--accent:#176b5b;--pale:#edf6f3;--line:#d7e2df;--muted:#60716d;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;background:#f3f6f5;color:#24312e;font-family:Inter,"Noto Sans Tamil",sans-serif;font-size:14px}.tamil{font-family:"Noto Sans Tamil",Inter,sans-serif}
+header{background:var(--ink);color:white;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header h1{font-size:21px;margin:0 0 4px}header p{margin:0;color:#d2e4df}.lang{display:flex;gap:5px;background:#ffffff20;padding:4px;border-radius:10px}.lang button{border:0;border-radius:7px;padding:9px 13px;cursor:pointer;color:white;background:transparent}.lang button.active{background:white;color:var(--ink);font-weight:700}
+main{max-width:1180px;margin:24px auto;padding:0 16px 36px;display:grid;grid-template-columns:minmax(300px, .95fr) minmax(0,1.05fr);gap:20px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 4px 18px #163b3610}.panel h2{font-size:16px;color:var(--ink);margin:0 0 16px}.section{border-top:1px solid #edf1f0;padding-top:17px;margin-top:18px}.section:first-of-type{border:0;padding:0;margin:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;font-size:12px;font-weight:700;color:#40534e;margin-bottom:6px}.required{color:var(--danger)}input,select{width:100%;min-width:0;padding:10px 11px;border:1px solid #ccd8d4;border-radius:8px;background:white;color:#24312e;font:inherit}input:focus,select:focus{outline:2px solid #acd8cc;border-color:var(--accent)}.items-wrap{overflow-x:auto}.edit-table{width:100%;border-collapse:collapse;min-width:650px}.edit-table th{font-size:11px;text-align:left;color:#52645f;background:#f1f6f4;padding:9px 6px}.edit-table td{padding:6px;border-bottom:1px solid #e8eeec}.edit-table input,.edit-table select{padding:8px 6px;font-size:12px}
+.platform-options{display:flex;flex-direction:column;gap:5px;min-width:95px}.platform-options label{display:flex;align-items:center;gap:5px;margin:0;font-size:11px;font-weight:500;white-space:nowrap}.platform-options input[type=checkbox]{width:auto;min-width:0;margin:0;accent-color:var(--accent)}.sno{font-weight:700;text-align:center;color:var(--accent)}.remove{border:0;background:#fff0ef;color:#a12620;border-radius:7px;padding:8px;cursor:pointer}.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.btn{border:0;border-radius:8px;padding:11px 14px;font:600 13px Inter,"Noto Sans Tamil",sans-serif;cursor:pointer}.primary{background:var(--accent);color:white}.secondary{background:var(--pale);color:var(--ink)}.outline{background:white;border:1px solid var(--line);color:var(--ink)}.danger{background:#fff0ef;color:#a12620}.error{color:var(--danger);font-size:12px;margin-top:10px;line-height:1.5}.hint{font-size:12px;color:var(--muted);line-height:1.5}.preview-panel{padding:14px;position:sticky;top:12px}.preview-heading{font-size:13px;color:var(--muted);font-weight:700;margin:3px 6px 12px}.invoice{background:white;color:#182b27;width:100%;max-width:100%;min-height:600px;padding:26px 24px;border:1px solid #e4eae8;font-size:10px;line-height:1.5;overflow-wrap:anywhere;box-sizing:border-box}.invoice-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:2px solid var(--accent);padding-bottom:14px;width:100%;min-width:0}.business{flex:1;min-width:0;overflow-wrap:anywhere}.logo{width:76px;height:76px;object-fit:contain;object-position:center;flex:0 0 76px;border-radius:8px;margin-left:auto}.business h2{font-size:20px;line-height:1.25;margin:0 0 5px;color:var(--ink)}.business p{margin:2px 0;color:#4e605b;overflow-wrap:anywhere}.invoice-title{display:flex;justify-content:space-between;align-items:center;margin:17px 0 13px;gap:12px}.invoice-title h3{font-size:18px;margin:0;color:var(--ink)}.bill-meta{text-align:right}.bill-meta div{margin:3px 0}.bill-meta strong{color:var(--ink)}.customer-block{border:1px solid var(--line);border-radius:6px;padding:11px 12px;margin-bottom:14px}.customer-block h4{margin:0 0 7px;font-size:11px;color:var(--accent)}.customer-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}.customer-grid div{overflow-wrap:anywhere}.invoice-table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;font-size:9px;overflow-wrap:anywhere}.invoice-table th{background:var(--pale);color:var(--ink);font-weight:700}.invoice-table th,.invoice-table td{border:1px solid #bacbc5;padding:6px 4px;text-align:left;overflow-wrap:anywhere;word-break:normal;white-space:normal;box-sizing:border-box}.invoice-table th:first-child,.invoice-table td:first-child{text-align:center;width:7%}.invoice-table th:nth-child(2){width:29%}.invoice-table th:nth-child(3){width:15%}.invoice-table th:nth-child(4),.invoice-table th:nth-child(5){width:15%}.invoice-table th:last-child{width:19%;text-align:right}.invoice-table td:last-child{text-align:right;white-space:nowrap}.total-row{display:flex;justify-content:flex-end;margin-top:13px}.total-box{min-width:210px;border:1px solid var(--accent);background:var(--pale);padding:11px 14px;border-radius:6px;text-align:right}.total-label{font-size:10px;color:var(--ink);font-weight:700}.total-value{font-size:20px;font-weight:800;color:var(--accent);margin-top:3px}.signature{display:flex;justify-content:flex-end;margin-top:50px}.signature div{width:175px;text-align:center;border-top:1px solid #6d7e79;padding-top:7px;font-weight:600}.invoice-footer{border-top:1px solid #e0e8e5;margin-top:25px;padding-top:8px;color:#72817d;font-size:9px;text-align:center}.preview-placeholder{color:var(--muted);font-size:12px;margin:0 6px 12px}.hidden{display:none!important}
+@page{size:A4 portrait;margin:10mm}
+@media(max-width:900px){main{grid-template-columns:1fr}.preview-panel{position:static}.invoice{max-width:100%}}
+@media(max-width:540px){header{padding:16px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:15px}.invoice{padding:16px 12px}.logo{width:52px;height:52px;flex-basis:52px}.business h2{font-size:15px}.business p{font-size:8px}.invoice-header{gap:9px}.invoice-title h3{font-size:15px}.invoice-table{font-size:8px}.invoice-table th,.invoice-table td{padding:5px 3px}.total-value{font-size:17px}}
+@media print{html,body{background:white!important;width:100%;margin:0!important;padding:0!important}body{font-size:10pt}.no-print,header,main>.panel:first-child,.preview-heading,.preview-placeholder{display:none!important}main{display:block;margin:0!important;padding:0!important;max-width:none!important;width:100%!important}.preview-panel{padding:0!important;border:0!important;box-shadow:none!important;position:static!important;width:100%!important;max-width:none!important}.invoice{border:0!important;padding:0!important;margin:0!important;min-height:0!important;width:100%!important;max-width:none!important;font-size:9pt;line-height:1.4;overflow:visible!important}.invoice-header,.customer-block,.total-row,.total-box,.signature{break-inside:avoid;page-break-inside:avoid}.invoice-header{gap:10px;padding-bottom:10px}.business h2{font-size:16pt}.business p{font-size:7.5pt;margin:1px 0}.logo{width:65px;height:65px;flex-basis:65px}.invoice-title{margin:12px 0 10px}.invoice-title h3{font-size:14pt}.customer-block{padding:8px 10px;margin-bottom:10px}.invoice-table{font-size:7.5pt}.invoice-table th,.invoice-table td{padding:5px 3px;print-color-adjust:exact;-webkit-print-color-adjust:exact}.invoice-table thead{display:table-header-group}.invoice-table tr{break-inside:avoid;page-break-inside:avoid}.total-box{padding:8px 11px}.total-value{font-size:16pt}.signature{margin-top:28px}.invoice-footer{margin-top:18px}}
+</style>
+</head>
+<body>
+<header class="no-print">
+  <div><h1 id="siteBusinessName">Mugavai Ads</h1><p id="tagline">Bilingual advertising invoice generator</p></div>
+  <div class="lang" aria-label="Language"><button id="enBtn" class="active" type="button">English</button><button id="taBtn" type="button" class="tamil">தமிழ்</button></div>
+</header>
+<main>
+<section class="panel no-print">
+  <h2 data-i18n="billDetails">Bill Details</h2>
+  <div class="fields">
+    <div class="field"><label for="billNumber" data-i18n="billNumber">Bill Number <span class="required">*</span></label><input id="billNumber" autocomplete="off" placeholder="Enter bill number" required></div>
+    <div class="field"><label for="billDate" data-i18n="billDate">Bill Date <span class="required">*</span></label><input id="billDate" type="date" required></div>
+  </div>
+  <div class="section">
+    <h2 data-i18n="customerDetails">Customer Details</h2>
+    <div class="fields">
+      <div class="field full"><label for="clientName" data-i18n="clientName">Client Name <span class="required">*</span></label><input id="clientName" required></div>
+      <div class="field full"><label for="street" data-i18n="street">Street Name <span class="required">*</span></label><input id="street" required></div>
+      <div class="field"><label for="place" data-i18n="place">Place <span class="required">*</span></label><input id="place" value="Rameswaram" required></div>
+      <div class="field"><label for="district" data-i18n="district">District <span class="required">*</span></label><input id="district" value="Ramanathapuram" required></div>
+      <div class="field"><label for="state" data-i18n="state">State <span class="required">*</span></label><input id="state" value="Tamil Nadu" required></div>
+      <div class="field"><label for="pincode" data-i18n="pincode">Pincode <span class="required">*</span></label><input id="pincode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" value="623526" required></div>
+      <div class="field"><label for="contact" data-i18n="contact">Contact <span class="required">*</span></label><input id="contact" type="tel" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" required></div>
+      <div class="field"><label for="email" data-i18n="email">Email</label><input id="email" type="email"></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2 data-i18n="services">Advertising Services</h2>
+    <div class="items-wrap">
+      <table class="edit-table"><thead><tr>
+        <th data-i18n="sno">S.No</th><th data-i18n="description">Description</th><th data-i18n="platform">Ad Platform</th><th data-i18n="fromDate">From Date</th><th data-i18n="toDate">To Date</th><th data-i18n="amount">Amount (₹)</th><th></th>
+      </tr></thead><tbody id="itemsBody"></tbody></table>
+    </div>
+    <div class="btn-row"><button class="btn secondary" id="addItem" type="button" data-i18n="addItem">＋ Add Item</button></div>
+    <div id="errorBox" class="error" role="alert"></div>
+  </div>
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong data-i18n="totalAmount">Total Amount</strong><strong id="formTotal" style="font-size:20px;color:var(--accent)">₹0.00</strong></div>
+    <div class="btn-row">
+      <button class="btn primary" id="generate" type="button" data-i18n="generate">Generate Bill</button>
+      <button class="btn secondary" id="print" type="button" data-i18n="print">Print Bill</button>
+      <button class="btn secondary" id="download" type="button" data-i18n="download">Download PDF</button>
+      <button class="btn outline" id="clear" type="button" data-i18n="clear">Clear Form</button>
+    </div>
+    <p class="hint" data-i18n="note">Required fields are marked *. No GST is included in this invoice.</p>
+  </div>
+</section>
+<section class="panel preview-panel">
+  <div class="preview-heading no-print" data-i18n="preview">INVOICE PREVIEW · A4 PORTRAIT</div>
+  <p id="previewPlaceholder" class="preview-placeholder no-print" data-i18n="previewHint">Fill in the form and select Generate Bill to validate and refresh the invoice. The preview updates as you type.</p>
+  <article id="invoice" class="invoice" aria-label="Invoice preview">
+    <div class="invoice-header">
+      <div class="business">
+        <h2 id="businessName">Mugavai Ads</h2>
+        <p id="businessStreet">Sallaimalai Street</p>
+        <p id="businessPlace">Rameswaram, Ramanathapuram (Dt)</p>
+        <p id="businessState">Tamil Nadu – 623526</p>
+        <p id="businessContact">Contact: 8300023925</p>
+        <p id="businessEmail">Email: murugeswin@gmail.com</p>
+        <p id="businessInstagram">Instagram: instagram.com/mugavaiseithigal</p>
+      </div>
+      <img id="businessLogo" class="logo" alt="Mugavai Ads logo" crossorigin="anonymous">
+    </div>
+    <div class="invoice-title"><h3 id="invoiceTitle">INVOICE</h3><div class="bill-meta"><div><strong id="billNumberLabel">Bill Number:</strong> <span id="outBillNumber">—</span></div><div><strong id="billDateLabel">Bill Date:</strong> <span id="outBillDate">—</span></div></div></div>
+    <div class="customer-block"><h4 id="customerTitle">Customer Details</h4><div class="customer-grid" id="customerOutput"></div></div>
+    <table class="invoice-table"><thead><tr><th id="thSno">S.No</th><th id="thDescription">Description</th><th id="thPlatform">Ad Platform</th><th id="thFrom">From Date</th><th id="thTo">To Date</th><th id="thAmount">Amount (₹)</th></tr></thead><tbody id="invoiceItems"></tbody></table>
+    <div class="total-row"><div class="total-box"><div class="total-label" id="totalLabel">TOTAL AMOUNT</div><div class="total-value" id="outTotal">₹0.00</div></div></div>
+    <div class="signature"><div id="signatureLabel">Authorized Signature</div></div>
+    <div class="invoice-footer" id="footerText">Thank you for choosing Mugavai Ads – முகவை விளம்பரம்</div>
+  </article>
+</section>
+</main>
+<script>
+/* Replace this constant with the business owner's permanent logo image URL. */
+const LOGO_URL = "https://scontent.cdninstagram.com/v/t51.82787-19/723883561_17992503407988765_4359519765508475632_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=106&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=5pytyB66OBwQ7kNvwERnt3S&_nc_oc=Ado0jcSoCj3L0mhivG2vLw5BayvqYWlHoGbD_jGO24OMHGwjygAdZez-n9Kz7RH2OZ-l6YPgGK04OCV86__EXA1G&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=zBIaTcqlL8MyYFFVmILAwg&_nc_ss=78689&oh=00_AQMigS4paLK35RE9BWE-Ym2we-MqoSoxeiyjiPLU4-q10Q&oe=6ADEC8A0";
+const $ = id => document.getElementById(id);
+let language = "en", generated = false;
+const translations = {
+ en:{businessName:"Mugavai Ads",businessStreet:"Sallaimalai Street",businessPlace:"Rameswaram, Ramanathapuram (Dt)",businessState:"Tamil Nadu – 623526",businessContact:"Contact: 8300023925",businessEmail:"Email: murugeswin@gmail.com",businessInstagram:"Instagram: instagram.com/mugavaiseithigal",billDetails:"Bill Details",billNumber:"Bill Number",billDate:"Bill Date",customerDetails:"Customer Details",clientName:"Client Name",street:"Street Name",place:"Place",district:"District",state:"State",pincode:"Pincode",contact:"Contact",email:"Email",services:"Advertising Services",sno:"S.No",description:"Description",platform:"Ad Platform",fromDate:"From Date",toDate:"To Date",amount:"Amount (₹)",addItem:"＋ Add Item",totalAmount:"Total Amount",generate:"Generate Bill",print:"Print Bill",download:"Download PDF",clear:"Clear Form",note:"Required fields are marked *. No GST is included in this invoice.",preview:"INVOICE PREVIEW · A4 PORTRAIT",previewHint:"Fill in the form and select Generate Bill to validate and refresh the invoice. The preview updates as you type.",invoice:"INVOICE",customerTitle:"Customer Details",signature:"Authorized Signature",footer:"Thank you for choosing Mugavai Ads",remove:"Remove row",enterBill:"Please enter the bill number.",required:"Please complete all required customer fields.",emailInvalid:"Please enter a valid email address.",pinInvalid:"Pincode must be exactly 6 digits.",contactInvalid:"Enter a valid 10-digit Indian mobile number starting with 6–9.",itemRequired:"Add at least one advertising service row.",descriptionRequired:"Enter a description for every service row.",platformRequired:"Select at least one ad platform for every service row.",amountInvalid:"Enter a valid amount of ₹0 or more for every service.",dateInvalid:"To Date cannot be earlier than From Date.",clearConfirm:"Clear customer details and service rows? Your default address values will be preserved.",billNumberLabel:"Bill Number:",billDateLabel:"Bill Date:",name:"Client Name",streetLabel:"Street",placeLabel:"Place",districtLabel:"District",stateLabel:"State",pinLabel:"Pincode",contactLabel:"Contact",emailLabel:"Email",totalLabel:"TOTAL AMOUNT",platforms:["Instagram","Facebook","YouTube"]},
+ ta:{businessName:"முகவை விளம்பரம்",businessStreet:"சல்லிமலை தெரு",businessPlace:"இராமேஸ்வரம், இராமநாதபுரம் (மா)",businessState:"தமிழ்நாடு – 623526",businessContact:"மொபைல்: 8300023953",businessEmail:"இ-மெயில்: murugeswin@gmail.com",businessInstagram:"இன்ஸ்டாகிராம்: instagram.com/mugavaiseithigal",billDetails:"விலைப்பட்டியல் விவரங்கள்",billNumber:"விலைப்பட்டியல் எண்",billDate:"விலைப்பட்டியல் தேதி",customerDetails:"வாடிக்கையாளர் விவரங்கள்",clientName:"வாடிக்கையாளர்",street:"தெருவின் பெயர்",place:"இடத்தின் பெயர்",district:"மாவட்டப் பெயர்",state:"மாநிலப் பெயர்",pincode:"அஞ்சல் குறியீட்டு எண்",contact:"மொபைல்",email:"இ-மெயில்",services:"விளம்பர சேவை விவரங்கள்",sno:"வ.எண்",description:"விளக்கம்",platform:"விளம்பரத் தளம்",fromDate:"தொடக்க தேதி",toDate:"முடிவு தேதி",amount:"தொகை (₹)",addItem:"＋ புதிய வரிசையைச் சேர்",totalAmount:"மொத்தத் தொகை",generate:"விலைப்பட்டியல் உருவாக்கு",print:"விலைப்பட்டியலை அச்சிடு",download:"PDF பதிவிறக்கம்",clear:"படிவத்தை அழி",note:"* குறியிட்டவை கட்டாயம். இந்த விலைப்பட்டியலில் GST சேர்க்கப்படவில்லை.",preview:"விலைப்பட்டியல் முன்னோட்டம் · A4",previewHint:"விவரங்களை நிரப்பி விலைப்பட்டியல் உருவாக்கு என்பதைத் தேர்ந்தெடுக்கவும். தட்டச்சு செய்யும்போது முன்னோட்டம் புதுப்பிக்கப்படும்.",invoice:"விலைப்பட்டியல்",customerTitle:"வாடிக்கையாளர் விவரங்கள்",signature:"அங்கீகரிக்கப்பட்ட கையொப்பம்",footer:"முகவை விளம்பரத்தைத் தேர்ந்தெடுத்ததற்கு நன்றி",remove:"இந்த வரிசையை நீக்கு",enterBill:"விலைப்பட்டியல் எண்ணை உள்ளிடவும்.",required:"கட்டாயமான வாடிக்கையாளர் விவரங்களை நிரப்பவும்.",emailInvalid:"சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்.",pinInvalid:"அஞ்சல் குறியீடு 6 இலக்கங்களாக இருக்க வேண்டும்.",contactInvalid:"6–9 இல் தொடங்கும் சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.",itemRequired:"குறைந்தது ஒரு விளம்பர சேவை வரிசையையாவது சேர்க்கவும்.",descriptionRequired:"ஒவ்வொரு சேவைக்கும் விளக்கத்தை உள்ளிடவும்.",platformRequired:"ஒவ்வொரு சேவை வரிசைக்கும் குறைந்தது ஒரு விளம்பரத் தளத்தைத் தேர்ந்தெடுக்கவும்.",amountInvalid:"ஒவ்வொரு சேவைக்கும் ₹0 அல்லது அதற்கு மேற்பட்ட சரியான தொகையை உள்ளிடவும்.",dateInvalid:"முடிவு தேதி தொடக்க தேதிக்கு முந்தையதாக இருக்கக்கூடாது.",clearConfirm:"வாடிக்கையாளர் விவரங்களையும் சேவை வரிசைகளையும் அழிக்கவா? இயல்புநிலை முகவரி மதிப்புகள் பாதுகாக்கப்படும்.",billNumberLabel:"விலைப்பட்டியல் எண்:",billDateLabel:"விலைப்பட்டியல் தேதி:",name:"வாடிக்கையாளர்",streetLabel:"தெரு",placeLabel:"இடம்",districtLabel:"மாவட்டம்",stateLabel:"மாநிலம்",pinLabel:"அஞ்சல் குறியீடு",contactLabel:"மொபைல்",emailLabel:"இ-மெயில்",totalLabel:"மொத்தத் தொகை",platforms:["Instagram","Facebook","YouTube"]}
+};
+const money = n => new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+const dateToday = () => {const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+const fmtDate = v => {if(!v)return "—";const [y,m,d]=v.split("-");return `${d}/${m}/${y}`};
+$("businessLogo").src = LOGO_URL;
+$("billDate").value = dateToday();
+
+function addRow(data={}) {
+ const tr=document.createElement("tr");
+ tr.innerHTML=`<td class="sno"></td><td><input class="desc" aria-label="Description" placeholder="Service description" value=""></td><td><div class="platform-options" role="group" aria-label="Ad Platform"><label><input class="platform-choice" type="checkbox" value="Instagram" checked> Instagram</label><label><input class="platform-choice" type="checkbox" value="Facebook"> Facebook</label><label><input class="platform-choice" type="checkbox" value="YouTube"> YouTube</label></div></td><td><input class="from" type="date" aria-label="From Date"></td><td><input class="to" type="date" aria-label="To Date"></td><td><input class="amt" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Amount"></td><td><button type="button" class="remove" aria-label="Remove row">×</button></td>`;
+ $("itemsBody").appendChild(tr);
+ tr.querySelector(".desc").value=data.description||"";
+ const initialPlatforms = Array.isArray(data.platforms) ? data.platforms : (data.platform ? [data.platform] : ["Instagram"]);
+ tr.querySelectorAll(".platform-choice").forEach(cb=>cb.checked=initialPlatforms.includes(cb.value));
+ tr.querySelector(".from").value=data.from||"";
+ tr.querySelector(".to").value=data.to||"";
+ tr.querySelector(".amt").value=data.amount??"";
+ tr.querySelector(".remove").addEventListener("click",()=>{tr.remove();renumber();updateInvoice();});
+ tr.addEventListener("input",()=>{const from=tr.querySelector(".from").value;tr.querySelector(".to").min=from||"";updateInvoice();});
+ tr.querySelector(".from").addEventListener("change",()=>{const from=tr.querySelector(".from").value,to=tr.querySelector(".to");to.min=from||"";if(from&&to.value&&to.value<from){to.setCustomValidity(translations[language].dateInvalid)}else to.setCustomValidity("");updateInvoice();});
+ tr.querySelector(".to").addEventListener("change",()=>{const from=tr.querySelector(".from").value,to=tr.querySelector(".to");to.setCustomValidity(from&&to.value&&to.value<from?translations[language].dateInvalid:"");updateInvoice();});
+ renumber();updateInvoice();
+}
+function renumber(){[...$("itemsBody").rows].forEach((r,i)=>r.querySelector(".sno").textContent=i+1)}
+function getRows(){return [...$("itemsBody").rows].map(r=>({description:r.querySelector(".desc").value.trim(),platforms:[...r.querySelectorAll(".platform-choice:checked")].map(cb=>cb.value),from:r.querySelector(".from").value,to:r.querySelector(".to").value,amount:r.querySelector(".amt").value}))}
+function getTotal(){return getRows().reduce((s,r)=>s+(r.amount!==""&&Number.isFinite(Number(r.amount))&&Number(r.amount)>=0?Number(r.amount):0),0)}
+function customerData(){return {name:$("clientName").value.trim(),street:$("street").value.trim(),place:$("place").value.trim(),district:$("district").value.trim(),state:$("state").value.trim(),pincode:$("pincode").value.trim(),contact:$("contact").value.trim(),email:$("email").value.trim()}}
+function validate(){
+ const t=translations[language], c=customerData(), errors=[];
+ if(!$("billNumber").value.trim())errors.push(t.enterBill);
+ if(!c.name||!c.street||!c.place||!c.district||!c.state||!c.pincode||!c.contact)errors.push(t.required);
+ if(c.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email))errors.push(t.emailInvalid);
+ if(!/^\d{6}$/.test(c.pincode))errors.push(t.pinInvalid);
+ if(!/^[6-9]\d{9}$/.test(c.contact))errors.push(t.contactInvalid);
+ const rows=getRows();if(!rows.length)errors.push(t.itemRequired);
+ rows.forEach(r=>{if(!r.description)errors.push(t.descriptionRequired);if(!r.platforms.length)errors.push(t.platformRequired);if(r.amount===""||!Number.isFinite(Number(r.amount))||Number(r.amount)<0)errors.push(t.amountInvalid);if(r.from&&r.to&&r.to<r.from)errors.push(t.dateInvalid)});
+ $("errorBox").textContent=[...new Set(errors)].join(" ");
+ return errors.length===0;
+}
+function updateInvoice(){
+ const t=translations[language],c=customerData(),rows=getRows();
+ $("formTotal").textContent=money(getTotal());$("outTotal").textContent=money(getTotal());
+ $("outBillNumber").textContent=$("billNumber").value.trim()||"—";
+ $("outBillDate").textContent=fmtDate($("billDate").value);
+ $("customerOutput").innerHTML="";
+ const pairs=[[t.name,c.name],[t.streetLabel,c.street],[t.placeLabel,c.place],[t.districtLabel,c.district],[t.stateLabel,c.state],[t.pinLabel,c.pincode],[t.contactLabel,c.contact]];
+ if(c.email)pairs.push([t.emailLabel,c.email]);
+ pairs.forEach(([label,value])=>{const div=document.createElement("div");const strong=document.createElement("strong");strong.textContent=label+": ";div.append(strong,document.createTextNode(value||"—"));$("customerOutput").appendChild(div)});
+ $("invoiceItems").innerHTML="";
+ rows.forEach((r,i)=>{const tr=document.createElement("tr");[String(i+1),r.description||"—",r.platforms.join(", ")||"—",fmtDate(r.from),fmtDate(r.to),r.amount!==""&&Number(r.amount)>=0?money(Number(r.amount)):money(0)].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});$("invoiceItems").appendChild(tr)});
+ if(!rows.length){const tr=document.createElement("tr");const td=document.createElement("td");td.colSpan=6;td.textContent="—";td.style.textAlign="center";tr.appendChild(td);$("invoiceItems").appendChild(tr)}
+ $("businessName").textContent=t.businessName;$("businessStreet").textContent=t.businessStreet;$("businessPlace").textContent=t.businessPlace;$("businessState").textContent=t.businessState;$("businessContact").textContent=t.businessContact;$("businessEmail").textContent=t.businessEmail;$("businessInstagram").textContent=t.businessInstagram;
+ $("invoiceTitle").textContent=t.invoice;$("billNumberLabel").textContent=t.billNumberLabel;$("billDateLabel").textContent=t.billDateLabel;$("customerTitle").textContent=t.customerTitle;$("thSno").textContent=t.sno;$("thDescription").textContent=t.description;$("thPlatform").textContent=t.platform;$("thFrom").textContent=t.fromDate;$("thTo").textContent=t.toDate;$("thAmount").textContent=t.amount;$("totalLabel").textContent=t.totalLabel;$("signatureLabel").textContent=t.signature;$("footerText").textContent=t.footer;
+ $("invoice").classList.toggle("tamil",language==="ta");
+}
+function setLanguage(lang){
+ language=lang;document.documentElement.lang=lang==="ta"?"ta":"en";
+ $("enBtn").classList.toggle("active",lang==="en");$("taBtn").classList.toggle("active",lang==="ta");
+ document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(translations[lang][key]){if(el.tagName==="BUTTON"||el.tagName==="H2"||el.tagName==="P"||el.classList.contains("preview-heading"))el.textContent=translations[lang][key];else if(el.tagName==="LABEL"){const star=el.querySelector(".required");el.textContent=translations[lang][key]+" ";if(star)el.appendChild(star)}}});
+ document.querySelectorAll("#itemsBody .remove").forEach(b=>b.title=translations[lang].remove);
+ $("siteBusinessName").textContent=lang==="ta"?"முகவை விளம்பரம்":"Mugavai Ads";
+ $("tagline").textContent=lang==="ta"?"விளம்பர விலைப்பட்டியல் உருவாக்கி":"Advertising invoice generator";
+ updateInvoice();
+}
+$("addItem").addEventListener("click",()=>addRow());
+$("generate").addEventListener("click",()=>{if(validate()){generated=true;$("previewPlaceholder").classList.add("hidden");updateInvoice();$("errorBox").textContent="";if(window.innerWidth<900)$("invoice").scrollIntoView({behavior:"smooth",block:"start"})}});
+$("print").addEventListener("click",()=>{if(!validate())return;$("previewPlaceholder").classList.add("hidden");updateInvoice();window.print()});
+$("download").addEventListener("click",async()=>{
+ if(!validate())return;
+ $("previewPlaceholder").classList.add("hidden");updateInvoice();
+ const invoice=$("invoice"), originalStyle=invoice.getAttribute("style");
+ const filename=`Mugavai-Ads-${$("billNumber").value.trim().replace(/[^a-zA-Z0-9_-]/g,"_")||"invoice"}.pdf`;
+ try{
+   await document.fonts.ready;
+   const logo=$("businessLogo");
+   if(logo && !logo.complete) await new Promise(resolve=>{logo.onload=resolve;logo.onerror=resolve});
+   // Temporarily size the capture to A4's printable content width at 96dpi.
+   invoice.style.width="718px";invoice.style.maxWidth="718px";invoice.style.boxSizing="border-box";invoice.style.padding="24px";
+   const opts={margin:[10,10,10,10],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,useCORS:true,allowTaint:false,backgroundColor:"#ffffff",letterRendering:true,windowWidth:794,scrollX:0,scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait",compress:true},pagebreak:{mode:["css","legacy"],avoid:["tr"," .customer-block",".invoice-header",".total-row",".signature"]}};
+   await html2pdf().set(opts).from(invoice).save();
+ }catch(e){alert(language==="ta"?"PDF உருவாக்க முடியவில்லை. Print என்பதைத் தேர்ந்தெடுத்து Save as PDF பயன்படுத்தவும்.":"PDF could not be generated. Choose Print and select Save as PDF.");}
+ finally{if(originalStyle===null)invoice.removeAttribute("style");else invoice.setAttribute("style",originalStyle);updateInvoice()}
+});
+$("clear").addEventListener("click",()=>{if(!confirm(translations[language].clearConfirm))return;["billNumber","clientName","street","contact","email"].forEach(id=>$(id).value="");$("place").value="Rameswaram";$("district").value="Ramanathapuram";$("state").value="Tamil Nadu";$("pincode").value="623526";$("billDate").value=dateToday();$("itemsBody").innerHTML="";$("errorBox").textContent="";addRow();$("previewPlaceholder").classList.remove("hidden");updateInvoice()});
+$("enBtn").addEventListener("click",()=>setLanguage("en"));$("taBtn").addEventListener("click",()=>setLanguage("ta"));
+["billNumber","billDate","clientName","street","place","district","state","pincode","contact","email"].forEach(id=>$(id).addEventListener("input",updateInvoice));
+addRow();
+</script>
+</body>
+</html>
