@@ -22,6 +22,10 @@ export const BusinessSettingsModal: React.FC<BusinessSettingsModalProps> = ({
   const [formData, setFormData] = useState<BusinessProfile>(business);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  React.useEffect(() => {
+    setFormData(business);
+  }, [business]);
+
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -130,7 +134,7 @@ export const BusinessSettingsModal: React.FC<BusinessSettingsModalProps> = ({
             type="text"
             value={formData.upiId}
             onChange={(e) => setFormData({ ...formData, upiId: e.target.value })}
-            placeholder="8300023925@okhdfcbank"
+            placeholder="e.g. 8300023925@upi (optional)"
             className="w-full text-xs font-mono font-bold px-3 py-2 rounded-lg border border-amber-300 focus:outline-none focus:border-[#176b5b] bg-white"
           />
           <p className="text-[10px] text-amber-800">

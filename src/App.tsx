@@ -43,7 +43,19 @@ export default function App() {
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_PROFILE);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed) {
+          if (parsed.upiId === '8300023925@okhdfcbank') {
+            parsed.upiId = '';
+          }
+          if (parsed.streetEn === 'Sallaimalai Street') {
+            parsed.streetEn = 'Sallimalai Street';
+          }
+          localStorage.setItem(LOCAL_STORAGE_PROFILE, JSON.stringify(parsed));
+          return parsed;
+        }
+      }
     } catch {
       // fallback
     }

@@ -3,7 +3,7 @@ import { BusinessProfile, CustomerDetails, ServiceItem } from '../types/billing'
 export const DEFAULT_BUSINESS_PROFILE: BusinessProfile = {
   nameEn: "Mugavai Ads",
   nameTa: "முகவை விளம்பரம்",
-  streetEn: "Sallaimalai Street",
+  streetEn: "Sallimalai Street",
   streetTa: "சல்லிமலை தெரு",
   placeEn: "Rameswaram, Ramanathapuram (Dt)",
   placeTa: "இராமேஸ்வரம், இராமநாதபுரம் (மா)",
@@ -13,7 +13,7 @@ export const DEFAULT_BUSINESS_PROFILE: BusinessProfile = {
   contactTa: "8300023953",
   email: "murugeswin@gmail.com",
   instagram: "instagram.com/mugavaiseithigal",
-  upiId: "8300023925@okhdfcbank",
+  upiId: "",
   logoUrl: "https://scontent.cdninstagram.com/v/t51.82787-19/723883561_17992503407988765_4359519765508475632_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=106&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=5pytyB66OBwQ7kNvwERnt3S&_nc_oc=Ado0jcSoCj3L0mhivG2vLw5BayvqYWlHoGbD_jGO24OMHGwjygAdZez-n9Kz7RH2OZ-l6YPgGK04OCV86__EXA1G&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=zBIaTcqlL8MyYFFVmILAwg&_nc_ss=78689&oh=00_AQMigS4paLK35RE9BWE-Ym2we-MqoSoxeiyjiPLU4-q10Q&oe=6ADEC8A0",
   signatureTitleEn: "Authorized Signature",
   signatureTitleTa: "அங்கீகரிக்கப்பட்ட கையொப்பம்",

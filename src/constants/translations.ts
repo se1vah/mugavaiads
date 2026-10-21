@@ -3,7 +3,7 @@ export const translations = {
     appTitle: "Mugavai Ads",
     appSubtitle: "Advertising Invoice Generator",
     businessName: "Mugavai Ads",
-    businessStreet: "Sallaimalai Street",
+    businessStreet: "Sallimalai Street",
     businessPlace: "Rameswaram, Ramanathapuram (Dt)",
     businessState: "Tamil Nadu – 623526",
     businessContact: "Contact: 8300023925",
